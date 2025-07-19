@@ -1,4 +1,4 @@
-name: "Deploy AI Trip Planner API"
+name: "Deploy AI Trip Planner APP"
 
 on:
   push:
@@ -9,7 +9,7 @@ on:
 
 env:
   CODE_PATH: 'projects/ai-trip-planner'
-  AZURE_WEBAPP_NAME: genaiapiv1
+  AZURE_WEBAPP_NAME: genaiappv1
   AZURE_WEBAPP_PACKAGE_PATH: '.'  # App Service expects source code
   PYTHON_VERSION: '3.11'
   AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
@@ -38,9 +38,9 @@ jobs:
           --resource-group "AIML-RG" \
           --settings \
             SCM_DO_BUILD_DURING_DEPLOYMENT=true \
-            PORT=8502 \
+            PORT=8501 \
             PYTHON_VERSION=$PYTHON_VERSION \
-            STARTUP_COMMAND="uvicorn main:app"
+            STARTUP_COMMAND="streamlit run main.py"
 
     - name: Deploy to Azure Web App using Oryx
       id: deploy-to-webapp
