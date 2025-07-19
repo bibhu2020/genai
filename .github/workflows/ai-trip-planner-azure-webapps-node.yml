@@ -24,12 +24,6 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    - name: Load shared environment variables
-      run: |
-        set -a
-        source .github/env/shared.env
-        set +a
-
     - name: Set up Python
       uses: actions/setup-python@v5
       with:

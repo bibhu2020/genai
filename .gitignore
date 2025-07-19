@@ -18,8 +18,6 @@ __pycache__/
 .venv/
 venv/
 _venv/
-env/
-ENV/
 venv3/
 venv.bak/
 .virtualenv/
