@@ -3,6 +3,15 @@ description: Report a reproducible bug
 title: '[Bug]: '
 labels: [bug, needs-triage]
 body:
+  - type: input
+    id: shortname
+    attributes:
+      label: Short Name for Branch
+      description: Enter a short, meaningful name (max 15 characters) to help name the branch.
+      placeholder: e.g., login-error
+    validations:
+      required: true
+
   - type: textarea
     id: description
     attributes:
@@ -12,7 +21,7 @@ body:
     validations:
       required: true
 
-  - type: input
+  - type: textarea
     id: steps
     attributes:
       label: Steps to Reproduce
@@ -21,18 +30,6 @@ body:
         1. Go to...
         2. Click on...
         3. Error occurs
-    validations:
-      required: true
-
-  - type: dropdown
-    id: app
-    attributes:
-      label: Application Area
-      description: Which part of the platform?
-      options:
-        - CMS
-        - eCommerce
-        - Shared Service
     validations:
       required: true
 

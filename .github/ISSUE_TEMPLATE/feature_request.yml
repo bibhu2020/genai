@@ -3,6 +3,15 @@ description: Suggest a new feature or improvement
 title: '[Feature]: '
 labels: [enhancement]
 body:
+  - type: input
+    id: shortname
+    attributes:
+      label: Short Name for Branch
+      description: Enter a short, meaningful name (max 15 characters) to help name the feature branch.
+      placeholder: e.g., user-dashboard
+    validations:
+      required: true
+
   - type: textarea
     id: summary
     attributes:
@@ -10,16 +19,6 @@ body:
       description: What should be added or improved?
     validations:
       required: true
-
-  - type: dropdown
-    id: app
-    attributes:
-      label: Application Target
-      description: What part of the app is this for?
-      options:
-        - CMS
-        - eCommerce
-        - Both
 
   - type: textarea
     id: motivation

@@ -1,0 +1,75 @@
+name: Delete Branch on Issue Close
+
+on:
+  issues:
+    types: [closed]
+
+jobs:
+  delete-branch:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      issues: write # ✅ needed to comment on the issue
+
+    steps:
+      - name: Check and delete branch
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const issue = context.payload.issue;
+            const labels = issue.labels.map(label => label.name.toLowerCase());
+            const issueNumber = issue.number;
+
+            const isBug = labels.includes('bug');
+            const isFeature = labels.includes('enhancement');
+
+            if (!isBug && !isFeature) {
+              console.log('Not a bug or feature. Skipping branch deletion.');
+              return;
+            }
+
+            const branchType = isBug ? 'hotfix' : 'feature';
+
+            // Extract shortname from issue body (like during creation)
+            const body = issue.body.toLowerCase();
+            const shortnameMatch = body.match(/short name for branch.*\n\s*(.+)/i);
+            if (!shortnameMatch) {
+              console.log("No shortname found, skipping branch deletion.");
+              return;
+            }
+
+            const shortname = shortnameMatch[1]
+              .toLowerCase()
+              .replace(/\s+/g, '-')            // Replace spaces with hyphen
+              .replace(/[^a-z0-9\-]/g, '')     // Remove invalid characters
+              .replace(/-+/g, '-')             // Collapse multiple hyphens into one
+              .replace(/^-+|-+$/g, '');        // Trim leading/trailing hyphens
+
+
+            const branchName = `${branchType}/${issueNumber}-${shortname}`;
+            const fullRef = `heads/${branchName}`;
+
+            try {
+              await github.rest.git.deleteRef({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                ref: fullRef,
+              });
+
+              console.log(`✅ Branch '${branchName}' deleted.`);
+
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: issueNumber,
+                body: `🧹 Branch \`${branchName}\` has been deleted as the issue is now closed.`
+              });
+
+            } catch (error) {
+              if (error.status === 422) {
+                console.log(`⚠️ Branch '${branchName}' does not exist.`);
+              } else {
+                throw error;
+              }
+            }
