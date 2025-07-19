@@ -31,14 +31,16 @@ jobs:
         creds: ${{ env.AZURE_CREDENTIALS }}
 
     - name: Set App Service app settings
+      shell: bash
       run: |
         az webapp config appsettings set \
           --name "$AZURE_WEBAPP_NAME" \
-          --resource-group "$RESOURCE_GROUP_NAME" \
+          --resource-group "AIML_RG" \
           --settings \
             SCM_DO_BUILD_DURING_DEPLOYMENT=true \
             PORT=8502 \
-            PYTHON_VERSION=$PYTHON_VERSION
+            PYTHON_VERSION=$PYTHON_VERSION \
+            STARTUP_COMMAND="uvicorn main:app"
 
     - name: Deploy to Azure Web App using Oryx
       id: deploy-to-webapp
@@ -46,4 +48,3 @@ jobs:
       with:
         app-name: ${{ env.AZURE_WEBAPP_NAME }}
         package: ${{ env.CODE_PATH }}
-        startup-command: uvicorn main:app --host 0.0.0.0 --port 8502
