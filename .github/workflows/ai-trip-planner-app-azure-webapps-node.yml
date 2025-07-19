@@ -4,11 +4,11 @@ on:
   push:
     branches: [ "main" ]
     paths:
-      - 'projects/ai-trip-planner/**'
+      - 'projects/ai-trip-planner/app/**'
   workflow_dispatch:
 
 env:
-  CODE_PATH: 'projects/ai-trip-planner'
+  CODE_PATH: 'projects/ai-trip-planner/app'
   AZURE_WEBAPP_NAME: genaiappv1
   AZURE_WEBAPP_PACKAGE_PATH: '.'  # App Service expects source code
   PYTHON_VERSION: '3.11'
