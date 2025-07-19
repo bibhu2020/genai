@@ -4,11 +4,11 @@ on:
   push:
     branches: [ "main" ]
     paths:
-      - 'projects/python-webapp/**'  # Trigger only when files inside this folder change
+      - 'projects/ai-trip-planner/**'  # Trigger only when files inside this folder change
   workflow_dispatch:
 
 env:
-  CODE_PATH: 'projects/python-webapp'              # Path to your Python app
+  CODE_PATH: 'projects/ai-trip-planner'              # Path to your Python app
   AZURE_WEBAPP_NAME: genaiappv1                    # Azure Web App name
   AZURE_WEBAPP_PACKAGE_PATH: '.'                  # Deployment root
   PYTHON_VERSION: '3.11'                           # Python version
