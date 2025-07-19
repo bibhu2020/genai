@@ -2,7 +2,7 @@ import streamlit as st
 import requests
 import datetime
 
-BASE_URL = "http://localhost:8000"  # Backend endpoint
+BASE_URL = "https://genaiapiv1.azurewebsites.net"  # Backend endpoint
 
 # Set up Streamlit page configuration
 st.set_page_config(
