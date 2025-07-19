@@ -1,4 +1,4 @@
-name: "Deploy Python WebApp"
+name: "Deploy AI Trip Planner UI"
 
 on:
   push:
