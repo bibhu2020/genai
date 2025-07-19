@@ -1,0 +1,135 @@
+trigger: none
+
+resources:
+  pipelines:
+    - pipeline: aiBuildPipeline
+      project: 'Web Development'
+      source: /sre-pocs/AI-Alert-Build-Pipeline
+      trigger: true
+
+  repositories:
+    - repository: 1ESPipelineTemplates
+      type: git
+      name: 1ESPipelineTemplates/1ESPipelineTemplates
+      ref: refs/tags/release
+
+extends:
+  template: v1/1ES.Official.PipelineTemplate.yml@1ESPipelineTemplates
+  parameters:
+    pool:
+      name: MSSecurity-1ES-Build-Agents-Pool
+      image: MSSecurity-1ES-Ubuntu-2004
+      os: linux
+    sdl:
+      sourceAnalysisPool:
+        name: 1es-productiondev-agentpool
+        image: 1es-productiondev-windows-image
+        os: windows
+    customBuildTags:
+      - ES365AIMigrationTooling-BulkMigrated
+    stages:
+      - stage: Deploy
+        displayName: 'Deploy AI Alert to Azure Web App'
+        dependsOn: []
+        jobs:
+          - job: DeployAzureAppService
+            templateContext:
+              type: releaseJob
+              isProduction: false
+              inputs:
+              - input: pipelineArtifact
+                pipeline: aiBuildPipeline
+                artifactName: ai-drop
+                targetPath: '$(System.DefaultWorkingDirectory)/aiBuildPipeline'
+            steps:
+              - task: AzureAppServiceSettings@1
+                displayName: 'Configure App Settings for Azure Web App'
+                inputs:
+                  azureSubscription: 'LimaBean v2(46e5da92-f07b-4876-9e40-d7e3ced34a05)'
+                  appName: 'ai-alert-service'
+                  appSettings: |
+                    [
+                      {
+                        "name": "WEBSITE_RUN_FROM_PACKAGE",
+                        "value": "0"
+                      },
+                      {
+                        "name": "SCM_DO_BUILD_DURING_DEPLOYMENT",
+                        "value": "true"
+                      },
+                      {
+                        "name": "ENABLE_ORYX_BUILD",
+                        "value": "true"
+                      },
+                      {
+                        "name": "StartupCommand",
+                        "value": "uvicorn main:app --host 0.0.0.0 --port 8000 --workers 4"
+                      }
+                    ]
+
+              - script: |
+                  echo "Listing downloaded artifacts:"
+                  ls -R "$(System.DefaultWorkingDirectory)/aiBuildPipeline"
+                displayName: 'Debug: Check artifact structure'
+
+              - task: AzureWebApp@1
+                displayName: 'Deploy AI Alert to Azure Web App'
+                inputs:
+                  azureSubscription: 'LimaBean v2(46e5da92-f07b-4876-9e40-d7e3ced34a05)'
+                  appType: 'webAppLinux'
+                  appName: 'ai-alert-service'
+                  package: '$(System.DefaultWorkingDirectory)/aiBuildPipeline/ai-alert-*.zip'
+                  RuntimeStack: 'PYTHON|3.11'
+
+      - stage: PME_Deploy
+        displayName: 'Deploy AI Alert to Azure Web App in PME'
+        dependsOn: []
+        jobs:
+          - job: DeployAzureAppService
+            templateContext:
+              type: releaseJob
+              isProduction: false
+              inputs:
+              - input: pipelineArtifact
+                pipeline: aiBuildPipeline
+                artifactName: ai-drop
+                targetPath: '$(System.DefaultWorkingDirectory)/aiBuildPipeline'
+            steps:
+              - task: AzureAppServiceSettings@1
+                displayName: 'Configure App Settings for Azure Web App'
+                inputs:
+                  azureSubscription: 'ado-PME-badeprod-fic-serviceconnection'
+                  appName: 'ai-alert-pme-service'
+                  appSettings: |
+                    [
+                      {
+                        "name": "WEBSITE_RUN_FROM_PACKAGE",
+                        "value": "0"
+                      },
+                      {
+                        "name": "SCM_DO_BUILD_DURING_DEPLOYMENT",
+                        "value": "true"
+                      },
+                      {
+                        "name": "ENABLE_ORYX_BUILD",
+                        "value": "true"
+                      },
+                      {
+                        "name": "StartupCommand",
+                        "value": "uvicorn main:app --host 0.0.0.0 --port 8000 --workers 4"
+                      }
+                    ]
+
+              - script: |
+                  echo "Listing downloaded artifacts:"
+                  ls -R "$(System.DefaultWorkingDirectory)/aiBuildPipeline"
+                displayName: 'Debug: Check artifact structure'
+
+              - task: AzureWebApp@1
+                displayName: 'Deploy AI Alert to Azure Web App'
+                inputs:
+                  azureSubscription: 'ado-PME-badeprod-fic-serviceconnection'
+                  appType: 'webAppLinux'
+                  appName: 'ai-alert-pme-service'
+                  package: '$(System.DefaultWorkingDirectory)/aiBuildPipeline/ai-alert-*.zip'
+                  RuntimeStack: 'PYTHON|3.11'

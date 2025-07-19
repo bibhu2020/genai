@@ -1,0 +1,236 @@
+from fastapi import FastAPI, HTTPException
+from pydantic import BaseModel
+from datetime import datetime, timedelta
+from azure.monitor.query import LogsQueryClient, LogsQueryStatus
+from azure.identity import DefaultAzureCredential
+import pandas as pd
+from pandas import Timedelta
+import requests
+
+from utility.llm_factory import LLMFactory
+from langchain_core.prompts import ChatPromptTemplate
+from langchain_core.output_parsers import StrOutputParser
+
+from agents.agentic_workflow import GraphBuilder
+from fastapi.responses import JSONResponse
+import os
+
+from langserve import add_routes
+
+app = FastAPI()
+
+credential = DefaultAzureCredential()
+client = LogsQueryClient(credential)
+
+# Dictionary mapping appName to workspace_id
+WORKSPACE_IDS = {
+    "msonecloudapi-prod": "edf08e1f-916f-48c3-bc52-273492d63c8f",
+    "mstool": "edf08e1f-916f-48c3-bc52-273492d63c8f",
+    "blogging": "5938c293-3317-4e63-9b33-a248eb20cc81",
+    # Add more mappings as needed
+}
+
+class BurnRateRequest(BaseModel):
+    appName: str
+    burnRate: float
+    incidentTime: str  # Changed from alertWindowStartTime/EndTime to incidentTime
+    severity: str
+    bNotify: bool
+
+@app.post("/analyze-burnrate")
+async def analyze_burnrate(payload: BurnRateRequest):
+    try:
+        print(payload)
+        graph = GraphBuilder(model_provider="groq")
+        react_agent=graph() #it creates the __call__() method in the class
+        #react_agent = graph.build_graph()
+
+        png_graph = react_agent.get_graph().draw_mermaid_png()
+        with open("my_graph.png", "wb") as f:
+            f.write(png_graph)
+
+        print(f"Graph saved as 'my_graph.png' in {os.getcwd()}")
+        # Assuming request is a pydantic object like: {"question": "your text"}
+        messages={"messages": [query.question]}
+        output = react_agent.invoke(messages)
+
+        # If result is dict with messages:
+        if isinstance(output, dict) and "messages" in output:
+            final_output = output["messages"][-1].content  # Last AI response
+        else:
+            final_output = str(output)
+        
+        return {"answer": final_output}
+    except Exception as e:
+        return JSONResponse(status_code=500, content={"error": str(e)})
+
+    try:
+        app_name = payload.appName
+        severity = payload.severity
+        burn_rate = payload.burnRate
+        incident_time = datetime.fromisoformat(payload.incidentTime)
+
+        # Select workspace_id based on appName
+        workspace_id = WORKSPACE_IDS.get(app_name)
+        if not workspace_id:
+            raise HTTPException(status_code=400, detail=f"Unknown appName: {app_name}")
+
+        # Calculate alert window: 5 minutes before and after incident_time
+        start_time = incident_time - timedelta(minutes=5)
+        end_time = incident_time + timedelta(minutes=5)
+        timespan = (start_time, end_time)
+
+        tables = {
+            "AppRequests": f"""
+                AppRequests
+                | where TimeGenerated between (datetime({start_time.isoformat()}) .. datetime({end_time.isoformat()}))
+                and AppRoleName contains "{app_name}"
+                and Success == false
+                and toint(ResultCode) >= 500
+                | project TimeGenerated, type="request", Url, OperationName, Name, ResultCode, Duration = DurationMs, Success, AppRoleName
+            """,
+            "AppExceptions": f"""
+                AppExceptions
+                | where TimeGenerated between (datetime({start_time.isoformat()}) .. datetime({end_time.isoformat()}))
+                and AppRoleName contains "{app_name}"
+                and ProblemId != "Microsoft.IdentityModel.S2S.S2SAuthenticationException"
+                | project TimeGenerated, type="exception", OperationName, ProblemId, Message = OuterMessage, AppRoleName
+            """,
+            "AppTraces": f"""
+                AppTraces
+                | where TimeGenerated between (datetime({start_time.isoformat()}) .. datetime({end_time.isoformat()}))
+                and AppRoleName contains "{app_name}"
+                and SeverityLevel >= 2
+                | project TimeGenerated, type="trace", Message, SeverityLevel, AppRoleName
+            """,
+            "AppDependencies": f"""
+                AppDependencies
+                | where TimeGenerated between (datetime({start_time.isoformat()}) .. datetime({end_time.isoformat()}))
+                and AppRoleName contains "{app_name}"
+                and Success == false
+                | project TimeGenerated, type="dependency", Name, Target = Data, ResultCode, Success, Duration = DurationMs, AppRoleName, Server = AppRoleName
+            """
+        }
+
+        log_dict = {}
+        for table_name, query in tables.items():
+            response = client.query_workspace(workspace_id, query, timespan=timespan)
+            if response.status == LogsQueryStatus.SUCCESS and response.tables:
+                table = response.tables[0]
+                df = pd.DataFrame(table.rows, columns=table.columns)
+                df["type"] = table_name
+                log_dict[table_name] = df
+
+        def merge_with_role_and_time(base_df, other_df, tolerance="2s"):
+            if base_df.empty or other_df.empty:
+                return base_df
+            base_df["TimeGenerated"] = pd.to_datetime(base_df["TimeGenerated"])
+            other_df["TimeGenerated"] = pd.to_datetime(other_df["TimeGenerated"])
+            base_df.sort_values(["AppRoleName", "TimeGenerated"], inplace=True)
+            other_df.sort_values(["AppRoleName", "TimeGenerated"], inplace=True)
+            merged_chunks = []
+            for role, base_group in base_df.groupby("AppRoleName"):
+                other_group = other_df[other_df["AppRoleName"] == role]
+                if other_group.empty:
+                    merged_chunks.append(base_group)
+                    continue
+                overlapping = set(base_group.columns) & set(other_group.columns) - {"TimeGenerated", "AppRoleName"}
+                other_group = other_group.drop(columns=overlapping)
+                merged = pd.merge_asof(
+                    base_group,
+                    other_group,
+                    on="TimeGenerated",
+                    by="AppRoleName",
+                    direction="nearest",
+                    tolerance=Timedelta(tolerance)
+                )
+                merged_chunks.append(merged)
+            return pd.concat(merged_chunks).sort_values("TimeGenerated")
+
+        merged_logs = log_dict.get("AppRequests", pd.DataFrame())
+        for table in ["AppExceptions", "AppTraces", "AppDependencies"]:
+            merged_logs = merge_with_role_and_time(merged_logs, log_dict.get(table, pd.DataFrame()))
+
+        if merged_logs.shape[0] > 30:
+            merged_logs = merged_logs.sample(30)
+            merged_logs.sort_values(["AppRoleName", "TimeGenerated"], inplace=True)
+
+        lines = []
+        for _, row in merged_logs.iterrows():
+            summary = f"[{row['TimeGenerated']}] [{row['type']}] " + " | ".join(
+                f"{k}={row[k]}" for k in row.index if k not in ['TimeGenerated', 'type']
+            )
+            lines.append(summary)
+
+        log_context = "\n".join(lines[:10] + lines[-10:])
+
+        prompt_text = f"""
+        A spike in error burn rate was detected between {start_time} and {end_time}.
+        Here are logs across request, exception, trace, and dependency tables:
+        {log_context}
+        Analyze the root cause and recommend how to mitigate or fix the issue.
+        """
+
+        prompt = ChatPromptTemplate.from_messages([
+            ("system", """
+                You are a precise and reliable SRE assistant.
+
+                Your task is to analyze system logs and telemetry to identify the root cause of incidents using only the provided data—**no assumptions**.
+
+                - 🔹 Summarize the issue in **1 bullet point**.
+                - 🔹 Identify the **error source**, **server**, and **time of occurrence**.
+                - 🔹 Examine **incoming URLs** (`Name`, `OperationName`) for invalid paths or unusual patterns.
+                - 🔹 Provide a concise **root cause analysis** in **2-3 bullets**.
+                - 🔹 Recommend **2-3 clear mitigation steps**.
+
+                Keep your response direct, specific, and grounded in log evidence.
+
+            """),
+            ("human", "{prompt_text}")
+        ])
+
+        llm = LLMFactory.get_llm('groq')
+        chain = prompt | llm | StrOutputParser()
+        result = chain.invoke({"prompt_text": prompt_text})
+
+        # Send notification if requested
+        if payload.bNotify:
+            EMAIL_API_URL = "https://gdcwebopsemail.azurewebsites.net/key/api/emailhtml"
+            API_KEY = "ZdMhM5N2JJ6KZqF"  # Replace with your actual API key
+            email_to = "v-bimishra@microsoft.com"  # Replace with actual recipient
+            email_from = "DoNotReply@gdcwebopsservice.microsoft.com"   # Replace with actual sender
+            email_subject = f"Incident Analysis Report for {app_name} at {incident_time}"
+            email_body = f"""
+                <h2>Incident Analysis from LLM</h2>
+                <p><b>Incident Time:</b> {incident_time}</p>
+                <p><b>Severity:</b> {severity}</p>
+                <pre>{result}</pre>
+            """
+            headers = {
+                "Content-Type": "application/json",
+                "Authorization": f"ApiKey {API_KEY}"
+            }
+            payload_email = {
+                "emailTo": email_to,
+                "emailFrom": email_from,
+                "emailSubject": email_subject,
+                "emailBody": email_body
+            }
+            try:
+                email_response = requests.post(EMAIL_API_URL, json=payload_email, headers=headers)
+                if email_response.ok:
+                    print("Notification sent!")
+                else:
+                    print("Failed to send notification:", email_response.status_code, email_response.text)
+            except Exception as e:
+                print("Exception while sending notification:", str(e))
+
+        return {"statusCode": 200, "result": result}
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+# pip install fastapi uvicorn pandas azure-monitor-query azure-identity langchain tiktoken langchain_openai langchain_ollama langserve langchain_groq huggingface_hub langchain_huggingface requests
+
+# uvicorn main:app --reload

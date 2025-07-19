@@ -1,0 +1,9 @@
+openai==1.55.3 
+datasets 
+evaluate 
+rouge_score 
+bert_score
+pytubefix==7.4.0 
+tiktoken 
+openai-whisper
+yt_dlp

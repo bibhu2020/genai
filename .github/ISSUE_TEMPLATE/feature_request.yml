@@ -1,0 +1,34 @@
+name: 🚀 Feature Request
+description: Suggest a new feature or improvement
+title: '[Feature]: '
+labels: [enhancement]
+body:
+  - type: textarea
+    id: summary
+    attributes:
+      label: Feature Description
+      description: What should be added or improved?
+    validations:
+      required: true
+
+  - type: dropdown
+    id: app
+    attributes:
+      label: Application Target
+      description: What part of the app is this for?
+      options:
+        - CMS
+        - eCommerce
+        - Both
+
+  - type: textarea
+    id: motivation
+    attributes:
+      label: Motivation
+      description: Why is this feature needed? What problem does it solve?
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives Considered
+      description: Describe any alternatives you've considered.

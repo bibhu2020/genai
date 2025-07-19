@@ -1,0 +1,29 @@
+llm:
+  openai:
+    provider: "openai"
+    model_name: "o4-mini"
+  groq:
+    provider: "groq"
+    model_name: "deepseek-r1-distill-llama-70b"
+  azureopenai:
+    provider: "azureopenai"
+    model_name: "gpt-4o"
+    endpoint: "https://srepoc-ai-services.openai.azure.com/"
+    api_version: "2025-01-01-preview"
+application:
+  msonecloudapi:
+    name: "Data Connector"
+    app_role_name: "msonecloudapi-prod"
+    log_analytics_workspace_id: "edf08e1f-916f-48c3-bc52-273492d63c8f"
+    email_to: "v-bimishra@microsoft.com;v-nikhilma@microsoft.com;v-ghsaiteja@microsoft.com;chachin@microsoft.com"
+  msonecloudtool:
+    name: "MS One Cloud Tool"
+    app_role_name: "msonecloudtool-prod"
+    log_analytics_workspace_id: "edf08e1f-916f-48c3-bc52-273492d63c8f"
+    email_to: "v-bimishra@microsoft.com;v-nikhilma@microsoft.com;v-ghsaiteja@microsoft.com"
+  msonecloudblogs:
+    name: "MS One Cloud Blogs"
+    app_role_name: "msonecloudblogs-prod"
+    log_analytics_workspace_id: "5938c293-3317-4e63-9b33-a248eb20cc81"
+    email_to: "v-bimishra@microsoft.com;v-nikhilma@microsoft.com;v-ghsaiteja@microsoft.com"
+        

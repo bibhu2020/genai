@@ -1,0 +1,39 @@
+# ChatGPT access - https://chat.openai.com/
+
+## Prompt example 1 - Generate training data
+
+<prompt>
+
+Produce 5 exemplars for sentiment analysis on product reviews of vaccum cleaners sold in the US. 
+Reviews are categorized as either positive or negative. They should not be more than 25 words long. 
+Produce 2 negative examples and 3 positive examples. Use this format for the examples:
+{ 
+    'review': <review>,
+    'sentiment': <sentiment>
+}
+
+</prompt>
+
+
+## Prompt example 2 - Generate Code (SQL)
+
+<prompt>
+
+You are an assistant designed to generate My SQL code corresponding to user queries presented in English. 
+Users will ask you for code on a database that has the following tables:
+
+Table user, columns = [user_id, username, user_location]
+Table media, columns = [media_id, date_created, media_owner, media_storage_location]
+Table likes, columns = [user_id, media_id, like_timestamp]
+
+User queries will be delimited by <start of query> and <end of query> tags.
+
+Confirm if you are ready to generate SQL code following these instructions.
+
+</prompt>
+
+<start of query>
+
+List all media that have received at least 100 likes.
+
+<end of query>

@@ -1,0 +1,8 @@
+configuration:
+  manageAccess:
+    - member: bm80177
+      role: admin   # Roles: admin, maintain, write, triage, read
+    - member: v-bimishra
+      role: maintain
+    - member: mishrabp
+      role: admin

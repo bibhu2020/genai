@@ -1,0 +1,29 @@
+name: Apply ACL
+
+on:
+  push:
+    paths:
+      - '.github/access-control/acl.yaml'
+
+jobs:
+  apply-acl:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: pip install requests pyyaml
+
+      - name: Apply Access Control from acl.yaml
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+        run: |
+          python .github/access-control/apply_acl.py

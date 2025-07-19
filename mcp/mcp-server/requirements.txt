@@ -1,0 +1,7 @@
+psycopg2
+fastapi
+uvicorn
+load_dotenv
+azure.mgmt.loganalytics
+azure.identity
+requests

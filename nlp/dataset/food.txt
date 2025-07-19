@@ -1,0 +1,4 @@
+happy	the food is amazaing.
+sad	the food is not amazaing.
+happy	this is best food I ever had!
+sad	It is just ok, nothing great about the food.

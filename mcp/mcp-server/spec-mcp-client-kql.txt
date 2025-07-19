@@ -1,0 +1,75 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "MCP Query Tools",
+    "version": "1.0"
+  },
+  "servers": [
+    {
+      "url": "https://srepoc-mcp-server-python-b5cydkbnamgafyab.b01.azurefd.net"
+    }
+  ],
+  "paths": {
+    "/query_log_analytics": {
+      "post": {
+        "operationId": "queryLogAnalytics",
+        "description": "Execute Kusto (KQL) query against Azure Log Analytics via MCP proxy",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "query": {
+                    "type": "string",
+                    "description": "Kusto query to run, e.g. Heartbeat | take 5"
+                  }
+                },
+                "required": [
+                  "query"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Rows returned by the Kusto query",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "rows": {
+                      "type": "array",
+                      "items": {
+                        "type": "object"
+                      },
+                      "description": "List of JSON objects representing each row"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error executing query",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

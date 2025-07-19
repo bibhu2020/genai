@@ -1,0 +1,6 @@
+langchain
+ipykernel
+langserver
+fastapi
+uvicorn
+

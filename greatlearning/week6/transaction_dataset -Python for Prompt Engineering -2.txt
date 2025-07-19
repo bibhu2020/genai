@@ -1,0 +1,8 @@
+﻿Loan Disbursement: $5000 to Account 12345678
+Repayment: $2000 from Account 87654321
+Loan Disbursement: $7500 to Account 23456789
+Customer Feedback: Excellent service for Account 12345678
+Repayment: $1500 from Account 23456789
+Customer Feedback: Very satisfied with the quick process for Account 23456789
+Loan Disbursement: $3000 to Account 34567890
+Repayment: $1000 from Account 34567890

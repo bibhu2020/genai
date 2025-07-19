@@ -1,0 +1,90 @@
+# Build pipeline for Python app targeting Azure Web App deployment
+# S360-Build-pipeline
+
+trigger:
+  branches:
+    include:
+      - main
+      - develop
+
+variables:
+  pythonVersion: '3.11'
+  workingDirectory: '$(Build.SourcesDirectory)/pocs/genai/ai-alert/'
+  pipCacheDir: '$(Pipeline.Workspace)/.pip-cache'
+
+resources:
+  repositories:
+    - repository: 1ESPipelineTemplates
+      type: git
+      name: 1ESPipelineTemplates/1ESPipelineTemplates
+      ref: refs/tags/release
+
+extends:
+  template: v1/1ES.Official.PipelineTemplate.yml@1ESPipelineTemplates
+  parameters:
+    pool:
+      name: MSSecurity-1ES-Build-Agents-Pool
+      image: MSSecurity-1ES-Ubuntu-2004
+      os: linux
+    sdl:
+      sourceAnalysisPool:
+        name: 1es-productiondev-agentpool
+        image: 1es-productiondev-windows-image
+        os: windows
+    customBuildTags:
+      - ES365AIMigrationTooling-BulkMigrated
+    stages:
+      - stage: Build_Artifacts_Python
+        displayName: 'Build artifacts for Python'
+        jobs:
+          - job: Build_Artifacts_Python
+            templateContext:
+              outputs:
+                - output: pipelineArtifact
+                  displayName: 'Publish Artifact: ai-drop'
+                  targetPath: '$(Pipeline.Workspace)/ai-drop'
+                  artifactName: ai-drop
+            steps:
+              - task: UsePythonVersion@0
+                inputs:
+                  versionSpec: '$(pythonVersion)'
+                  addToPath: true 
+
+              - task: Cache@2
+                inputs:
+                  key: 'python | "$(Agent.OS)" | $(workingDirectory)/requirements.txt'
+                  path: '$(pipCacheDir)'
+                  restoreKeys: |
+                    python | "$(Agent.OS)"
+                displayName: 'Cache Python Dependencies'
+
+              - script: |
+                  if [ ! -f requirements.txt ]; then echo "requirements.txt not found"; exit 1; fi
+                  python -m venv antenv
+                  source antenv/bin/activate
+                  python -m pip install --upgrade pip
+                  pip install -r requirements.txt
+                workingDirectory: '$(workingDirectory)'
+                env:
+                  PIP_CACHE_DIR: $(pipCacheDir)
+                displayName: "Install Python dependencies"
+
+              - script: |
+                  source antenv/bin/activate
+                  if [ -d tests ]; then
+                    pip install pytest
+                    pytest tests/
+                  else
+                    echo "No tests directory found. Skipping tests."
+                  fi
+                workingDirectory: '$(workingDirectory)'
+                displayName: "Run tests (if available)"
+
+              - script: |
+                  mkdir -p $(Pipeline.Workspace)/ai-drop
+                  cd $(workingDirectory)
+                  zip -r $(Pipeline.Workspace)/ai-drop/ai-alert-$(Build.BuildId).zip . -x "*.pyc" "antenv/*"
+                displayName: 'Zip files excluding antenv and .pyc files'
+
+
+

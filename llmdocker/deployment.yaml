@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ollama-gemma2b
+  namespace: riskiq
+  labels:
+    app: ollama-gemma2b
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ollama-gemma2b
+  template:
+    metadata:
+      labels:
+        app: ollama-gemma2b
+    spec:
+      containers:
+        - name: ollama-gemma2b
+          image: aksocpocacr.azurecr.io/ollama-gemma2b:v1
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 11434
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ollama-gemma2b-service
+  namespace: riskiq
+spec:
+  selector:
+    app: ollama-gemma2b
+  ports:
+    - protocol: TCP
+      port: 11434
+      targetPort: 11434
+  type: ClusterIP

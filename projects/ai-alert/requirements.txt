@@ -1,0 +1,12 @@
+pandas
+ipykernel
+uvicorn[standard]
+fastapi
+azure-monitor-query 
+azure-identity 
+langchain
+langgraph
+tiktoken 
+langchain_openai 
+langchain_groq 
+langchain_community

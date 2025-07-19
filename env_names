@@ -1,0 +1,27 @@
+#srepoc-ai-mi - managed identity
+AZURE_MANAGED_IDENTITY_CLIENT_ID="2508e5bc-46c4-4823-8aa3-9e5c150efa4e"
+AZURE_OPENAI_API_BASE_MODEL="gpt-4o"
+AZURE_OPENAI_API_URI="https://srepoc-ai-services.openai.azure.com/"
+AZURE_OPENAI_API_VERSION="2025-01-01-preview"
+
+# OPENAI
+OPENAI_API_KEY=""
+OPENAI_API_MODEL="gpt-4.1"
+
+# LANGCHAIN
+LANGSMITH_TRACING=true
+LANGSMITH_ENDPOINT="https://api.smith.langchain.com"
+LANGSMITH_API_KEY=""
+LANGSMITH_
+
+# HUGGINGFACE
+HF_TOKEN=""
+
+# GROQ
+GROQ_API_KEY=""
+
+# POSTGRESQL
+PGHOST='ep-fancy-hill-a8tm0pqc-pooler.eastus2.azure.neon.tech'
+PGDATABASE='neondb'
+PGUSER='neondb_owner'
+PGPASSWORD=''

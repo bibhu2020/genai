@@ -1,0 +1,11 @@
+data:
+  path: data/housing.csv
+model:
+  n_estimators: 100
+  max_depth: 10
+  random_state: 42
+# experiment:
+#   name: "housing_price_prediction"
+#   tracking_uri: http://localhost:5000
+#   artifact_location: "_artifacts"
+#   tags:

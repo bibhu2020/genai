@@ -1,0 +1,534 @@
+---
+##################### apigateway -3001
+#######################################################################################################################
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: apigateway-nestjs
+  namespace: riskiq
+  labels:
+    app: apigateway-nestjs
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: apigateway-nestjs
+  template:
+    metadata:
+      labels:
+        app: apigateway-nestjs
+    spec:
+      containers:
+        - name: apigateway-nestjs
+          image: aksocpocacr.azurecr.io/apigateway-nestjs:v1
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 3001
+          env:
+            - name: PORT
+              value: "3001"
+            - name: NODE_ENV
+              value: "production"  
+            # - name: CLIENT_ID
+            #   value: "0fa320a0-b0d0-4a51-aa66-ab64f788b665"
+            # - name: TENANT_ID
+            #   value: "72f988bf-86f1-41af-91ab-2d7cd011db47"
+            # - name: REDIRECT_URI
+            #   value: "https://srepoc-oauthtest-fmb2d6abdjgpg5ht.b01.azurefd.net/redirect"
+            # - name: MANAGED_IDENTITY_CLIENT_ID
+            #   value: "e7a6458b-c7a2-4516-83b3-4b292891cb51"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: apigateway-nestjs-service
+  namespace: riskiq
+spec:
+  selector:
+    app: apigateway-nestjs
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 3001
+  type: ClusterIP
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+  name: apigateway-nestjs-https-ingress
+  namespace: riskiq
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: apigateway-nestjs.cloudblogsaksstg.microsoft.com
+    http:
+      paths:
+      - backend:
+          service:
+            name: apigateway-nestjs-service
+            port:
+              number: 80
+        path: /
+        pathType: Prefix
+  tls:
+  - hosts:
+    - apigateway-nestjs.cloudblogsaksstg.microsoft.com
+    secretName: riskiq-tls-secret
+
+---
+##################### weatherapi - 3002
+#######################################################################################################################
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: weatherapi-nestjs
+  namespace: riskiq
+  labels:
+    app: weatherapi-nestjs
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: weatherapi-nestjs
+  template:
+    metadata:
+      labels:
+        app: weatherapi-nestjs
+    spec:
+      containers:
+        - name: weatherapi-nestjs
+          image: aksocpocacr.azurecr.io/weatherapi-nestjs:v1
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 3002
+          env:
+            - name: PORT
+              value: "3002"
+            - name: NODE_ENV
+              value: "production"  
+            # - name: CLIENT_ID
+            #   value: "0fa320a0-b0d0-4a51-aa66-ab64f788b665"
+            # - name: TENANT_ID
+            #   value: "72f988bf-86f1-41af-91ab-2d7cd011db47"
+            # - name: REDIRECT_URI
+            #   value: "https://srepoc-oauthtest-fmb2d6abdjgpg5ht.b01.azurefd.net/redirect"
+            # - name: MANAGED_IDENTITY_CLIENT_ID
+            #   value: "e7a6458b-c7a2-4516-83b3-4b292891cb51"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: weatherapi-nestjs-service
+  namespace: riskiq
+spec:
+  selector:
+    app: weatherapi-nestjs
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 3002
+  type: ClusterIP
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+  name: weatherapi-nestjs-https-ingress
+  namespace: riskiq
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: weatherapi-nestjs.cloudblogsaksstg.microsoft.com
+    http:
+      paths:
+      - backend:
+          service:
+            name: weatherapi-nestjs-service
+            port:
+              number: 80
+        path: /
+        pathType: Prefix
+  tls:
+  - hosts:
+    - weatherapi-nestjs.cloudblogsaksstg.microsoft.com
+    secretName: riskiq-tls-secret
+---
+
+##################### weatherapi - 3003
+#######################################################################################################################
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: weatherapi-nestjs
+  namespace: riskiq
+  labels:
+    app: weatherapi-nestjs
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: weatherapi-nestjs
+  template:
+    metadata:
+      labels:
+        app: weatherapi-nestjs
+    spec:
+      containers:
+        - name: weatherapi-nestjs
+          image: aksocpocacr.azurecr.io/weatherapi-nestjs:v1
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 3003
+          env:
+            - name: PORT
+              value: "3003"
+            - name: NODE_ENV
+              value: "production"  
+            # - name: CLIENT_ID
+            #   value: "0fa320a0-b0d0-4a51-aa66-ab64f788b665"
+            # - name: TENANT_ID
+            #   value: "72f988bf-86f1-41af-91ab-2d7cd011db47"
+            # - name: REDIRECT_URI
+            #   value: "https://srepoc-oauthtest-fmb2d6abdjgpg5ht.b01.azurefd.net/redirect"
+            # - name: MANAGED_IDENTITY_CLIENT_ID
+            #   value: "e7a6458b-c7a2-4516-83b3-4b292891cb51"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: weatherapi-nestjs-service
+  namespace: riskiq
+spec:
+  selector:
+    app: weatherapi-nestjs
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 3003
+  type: ClusterIP
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+  name: weatherapi-nestjs-https-ingress
+  namespace: riskiq
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: weatherapi-nestjs.cloudblogsaksstg.microsoft.com
+    http:
+      paths:
+      - backend:
+          service:
+            name: weatherapi-nestjs-service
+            port:
+              number: 80
+        path: /
+        pathType: Prefix
+  tls:
+  - hosts:
+    - weatherapi-nestjs.cloudblogsaksstg.microsoft.com
+    secretName: riskiq-tls-secret
+---
+
+##################### azureapi - 3005
+#######################################################################################################################
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: azureapi-nestjs
+  namespace: riskiq
+  labels:
+    app: azureapi-nestjs
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: azureapi-nestjs
+  template:
+    metadata:
+      labels:
+        app: azureapi-nestjs
+    spec:
+      containers:
+        - name: azureapi-nestjs
+          image: aksocpocacr.azurecr.io/azureapi-nestjs:v1
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 3005
+          env:
+            - name: PORT
+              value: "3005"
+            - name: NODE_ENV
+              value: "production"  
+            # - name: CLIENT_ID
+            #   value: "0fa320a0-b0d0-4a51-aa66-ab64f788b665"
+            # - name: TENANT_ID
+            #   value: "72f988bf-86f1-41af-91ab-2d7cd011db47"
+            # - name: REDIRECT_URI
+            #   value: "https://srepoc-oauthtest-fmb2d6abdjgpg5ht.b01.azurefd.net/redirect"
+            # - name: MANAGED_IDENTITY_CLIENT_ID
+            #   value: "e7a6458b-c7a2-4516-83b3-4b292891cb51"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: azureapi-nestjs-service
+  namespace: riskiq
+spec:
+  selector:
+    app: azureapi-nestjs
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 3005
+  type: ClusterIP
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+  name: azureapi-nestjs-https-ingress
+  namespace: riskiq
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: azureapi-nestjs.cloudblogsaksstg.microsoft.com
+    http:
+      paths:
+      - backend:
+          service:
+            name: azureapi-nestjs-service
+            port:
+              number: 80
+        path: /
+        pathType: Prefix
+  tls:
+  - hosts:
+    - azureapi-nestjs.cloudblogsaksstg.microsoft.com
+    secretName: riskiq-tls-secret
+---
+
+##################### oauthapp-nestjs -3004
+#######################################################################################################################
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: oauthapp-nestjs
+  namespace: riskiq
+  labels:
+    app: oauthapp-nestjs
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: oauthapp-nestjs
+  template:
+    metadata:
+      labels:
+        app: oauthapp-nestjs
+    spec:
+      containers:
+        - name: oauthapp-nestjs
+          image: aksocpocacr.azurecr.io/oauthapp-nestjs:v1
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 3004
+          env:
+            - name: PORT
+              value: "3004"
+            - name: NODE_ENV
+              value: "production"  
+            - name: AZURE_CLIENT_ID
+              value: "0fa320a0-b0d0-4a51-aa66-ab64f788b665"
+            - name: AZURE_TENANT_ID
+              value: "72f988bf-86f1-41af-91ab-2d7cd011db47"
+            - name: AUTH_REDIRCET_URL
+              value: "http://localhost:3004/auth/redirect"
+            - name: MANAGED_IDENTITY_CLIENT_ID
+              value: "30344d06-bb3d-4c3f-a300-fdf8f1173d2a"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: oauthapp-nestjs-service
+  namespace: riskiq
+spec:
+  selector:
+    app: oauthapp-nestjs
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 3004
+  type: ClusterIP
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+  name: oauthapp-nestjs-https-ingress
+  namespace: riskiq
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: oauthapp-nestjs.cloudblogsaksstg.microsoft.com
+    http:
+      paths:
+      - backend:
+          service:
+            name: oauthapp-nestjs-service
+            port:
+              number: 80
+        path: /
+        pathType: Prefix
+  tls:
+  - hosts:
+    - oauthapp-nestjs.cloudblogsaksstg.microsoft.com
+    secretName: riskiq-tls-secret
+---
+
+##################### northwind-vuejs - 3011
+#######################################################################################################################
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: northwind-vuejs
+  namespace: riskiq
+  labels:
+    app: northwind-vuejs
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: northwind-vuejs
+  template:
+    metadata:
+      labels:
+        app: northwind-vuejs
+    spec:
+      containers:
+        - name: northwind-vuejs
+          image: aksocpocacr.azurecr.io/northwind-vuejs:v1
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 3011
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: northwind-vuejs-service
+  namespace: riskiq
+spec:
+  selector:
+    app: northwind-vuejs
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 3011
+  type: ClusterIP
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+  name: northwind-vuejs-https-ingress
+  namespace: riskiq
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: northwind-vuejs.cloudblogsaksstg.microsoft.com
+    http:
+      paths:
+      - backend:
+          service:
+            name: northwind-vuejs-service
+            port:
+              number: 80
+        path: /
+        pathType: Prefix
+  tls:
+  - hosts:
+    - northwind-vuejs.cloudblogsaksstg.microsoft.com
+    secretName: riskiq-tls-secret
+
+---
+##################### mcp-server - 3021
+#######################################################################################################################
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mcp-server
+  namespace: riskiq
+  labels:
+    app: mcp-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mcp-server
+  template:
+    metadata:
+      labels:
+        app: mcp-server
+    spec:
+      containers:
+        - name: mcp-server
+          image: aksocpocacr.azurecr.io/mcp-server:v1
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 3021
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mcp-server-service
+  namespace: riskiq
+spec:
+  selector:
+    app: mcp-server
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 3021
+  type: ClusterIP
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+  name: mcp-server-https-ingress
+  namespace: riskiq
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: mcp-server.cloudblogsaksstg.microsoft.com
+    http:
+      paths:
+      - backend:
+          service:
+            name: mcp-server-service
+            port:
+              number: 80
+        path: /
+        pathType: Prefix
+  tls:
+  - hosts:
+    - mcp-server.cloudblogsaksstg.microsoft.com
+    secretName: riskiq-tls-secret

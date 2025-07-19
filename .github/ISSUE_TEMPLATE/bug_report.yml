@@ -1,0 +1,44 @@
+name: 🐞 Bug Report
+description: Report a reproducible bug
+title: '[Bug]: '
+labels: [bug, needs-triage]
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: What is the bug? Include screenshots or logs if possible.
+      placeholder: The payment page crashes when...
+    validations:
+      required: true
+
+  - type: input
+    id: steps
+    attributes:
+      label: Steps to Reproduce
+      description: Describe the steps to reproduce the issue.
+      placeholder: |
+        1. Go to...
+        2. Click on...
+        3. Error occurs
+    validations:
+      required: true
+
+  - type: dropdown
+    id: app
+    attributes:
+      label: Application Area
+      description: Which part of the platform?
+      options:
+        - CMS
+        - eCommerce
+        - Shared Service
+    validations:
+      required: true
+
+  - type: input
+    id: environment
+    attributes:
+      label: Environment
+      description: Where did this occur? (dev, staging, prod)
+      placeholder: staging

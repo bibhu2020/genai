@@ -1,0 +1,40 @@
+name-template: 'v$NEXT_PATCH_VERSION 🌟'
+tag-template: 'v$NEXT_PATCH_VERSION'
+
+categories:
+  - title: '🚀 Features'
+    labels:
+      - 'feature'
+  - title: '🐛 Bug Fixes'
+    labels:
+      - 'bug'
+  - title: '🧰 Maintenance'
+    labels:
+      - 'chore'
+  - title: '📝 Documentation'
+    labels:
+      - 'docs'
+
+change-template: '- $TITLE (#$NUMBER) @$AUTHOR'
+no-changes-template: '- No significant changes.'
+
+exclude-labels:
+  - 'skip-changelog'
+
+version-resolver:
+  major:
+    labels:
+      - 'major'
+  minor:
+    labels:
+      - 'feature'
+  patch:
+    labels:
+      - 'bug'
+      - 'chore'
+      - 'docs'
+
+template: |
+  ## What's Changed
+
+  $CHANGES
