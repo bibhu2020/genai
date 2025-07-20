@@ -35,7 +35,7 @@
 - [ ] Planning & Tool-Using Agents (ReAct, AutoGPT, etc.)
 - [ ] LangGraph for Stateful Agents
 - [ ] Multi-Agent Collaboration (CrewAI, AutoGen)
-- [ ] Model Context Server (MCS): To manage persistent memory, tool use, and shared context across agents
+- [ ] Model Context Protocol (MCP)
 
 # 🔧 LLM Fine-Tuning (Advanced)
 - [ ] Introduction to Fine-Tuning & Instruction Tuning
