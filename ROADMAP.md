@@ -1,37 +1,56 @@
-# Pre-Requisites
+# ✅ Pre-Requisites
 - [ ] Linear Algebra and Statistics
-- [ ] Python
-- [ ] Python libraries like Numpy, Panda, and scikit-learn
+- [ ] Python Programming
+- [ ] Python Libraries: NumPy, Pandas, scikit-learn
 
-# Fundamentals of AI & ML
-- [ ] Fundamentals of Datascience 
-- [ ] Supervises Learning
+# 📘 Fundamentals of AI & ML
+- [ ] Fundamentals of Data Science
+- [ ] Supervised Learning
 - [ ] Unsupervised Learning
 - [ ] Feature Engineering
+- [ ] Model Evaluation & Metrics (e.g., accuracy, precision, recall)
 
-# NLP (Natural Language Processing)
+# 🗣️ Natural Language Processing (NLP)
+- [ ] Text Preprocessing (Tokenization, Lemmatization)
+- [ ] Word Embeddings (Word2Vec, GloVe, BERT)
+- [ ] Sequence Models (RNN, LSTM, Transformers)
+- [ ] Named Entity Recognition, Sentiment Analysis
 
-# Deep Learning
+# 🤖 Deep Learning
+- [ ] Neural Networks Fundamentals
+- [ ] CNNs, RNNs, and Transformers
+- [ ] Attention Mechanism
+- [ ] Training & Optimization (Backpropagation, Loss functions, Optimizers)
 
-# Generative AI
-- [ ] LLM Models (GPTs, Claude, LLLaMA)
-- [ ] LLM Platform (OpenAI, HuggingFace, Groq)
-- [ ] Running LLM Locally (Ollama)
+# ✨ Generative AI
+- [ ] Large Language Models (GPTs, Claude, LLaMA)
+- [ ] LLM Providers & Platforms (OpenAI, Hugging Face, Groq)
+- [ ] Running LLMs Locally (Ollama, LM Studio, etc.)
 - [ ] Prompt Engineering
-- [ ] Generative AI Framework (Langchain + Langgraph)
-- [ ] RAG
+- [ ] Generative AI Frameworks (LangChain, LangGraph)
+- [ ] Retrieval-Augmented Generation (RAG)
 
-# Agentic AI
-- [ ] Agentic AI
-- [ ] MCP Server
+# 🧠 Agentic AI
+- [ ] Concepts of Agentic AI
+- [ ] Planning & Tool-Using Agents (ReAct, AutoGPT, etc.)
+- [ ] LangGraph for Stateful Agents
+- [ ] Multi-Agent Collaboration (CrewAI, AutoGen)
+- [ ] Model Context Server (MCS): To manage persistent memory, tool use, and shared context across agents
 
-# LLM Tunning (Adavanced Topic)
-- [ ] Python Library PyTorch or TensorFlow
+# 🔧 LLM Fine-Tuning (Advanced)
+- [ ] Introduction to Fine-Tuning & Instruction Tuning
+- [ ] Low-Rank Adaptation (LoRA)
+- [ ] Python Libraries: PyTorch or TensorFlow
+- [ ] Hugging Face Transformers & PEFT
 
-# Generative AI - Software Engineering
-- [ ] Learn how to structure real projects
-- [ ] LLMOps (Deployment, Hosting, Monitoring and Tracking)
+# 🛠️ Generative AI for Software Engineering
+- [ ] Structuring Real-World Projects
+- [ ] LLMOps (Deployment, Hosting, Monitoring, and Tracking)
+- [ ] Key LLMOps Tools: LangSmith, PromptLayer, TruLens, WandB, MLflow, ZenML
+- [ ] Observability & Evaluation (Prompt testing, trace logs, feedback collection)
 
-# Demo Projects
-
-
+# 📂 Demo Projects
+- [ ] Document Q&A with RAG
+- [ ] Contract Summarizer
+- [ ] Chatbot with Memory + Tools
+- [ ] Autonomous Agent for Task Planning
