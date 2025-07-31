@@ -41,14 +41,14 @@ jobs:
         echo "non-interactive login set for zenml"
       working-directory: ml/ml_004
 
-    - name: 📦 Set stack (if needed)
-      env:
-        ZENML_STACK: ${{ secrets.ZENML_STACK }}
-      run: |
-        if [ -n "$ZENML_STACK" ]; then
-          zenml stack set "$ZENML_STACK"
-        fi
-      working-directory: ml/ml_004
+    # - name: 📦 Set stack (if needed)
+    #   env:
+    #     ZENML_STACK: ${{ secrets.ZENML_STACK }}
+    #   run: |
+    #     if [ -n "$ZENML_STACK" ]; then
+    #       zenml stack set "$ZENML_STACK"
+    #     fi
+    #   working-directory: ml/ml_004
 
     - name: 🚀 Run ZenML Pipeline
       run: |
