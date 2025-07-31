@@ -47,17 +47,17 @@ This enables the zenml to speak with mlflow server started above.
 
 #Step1: install zenml integration plugin for mlflow
 zenml integration install mlflow -y
-#Step2: registers a new experiment in mlflow (name: ml003_tracker). --flavor=mlflow tells the backend mlflow
-zenml experiment-tracker register ml003_tracker --flavor=mlflow --tracking_uri=http://localhost:5000  --tracking_token="dummy_token" 
-#Step3: Registers a model deployer component (name: ml003_model). --flavor=mlflow tells the backend mlflow
-zenml model-deployer register ml003_model --flavor=mlflow --tracking_uri=http://localhost:5000  --tracking_token="dummy_token" 
+#Step2: registers a new experiment in mlflow (name: ml004_tracker). --flavor=mlflow tells the backend mlflow
+zenml experiment-tracker register ml004_tracker --flavor=mlflow --tracking_uri=http://localhost:5000  --tracking_token="dummy_token" 
+#Step3: Registers a model deployer component (name: ml004_model). --flavor=mlflow tells the backend mlflow
+zenml model-deployer register ml004_model --flavor=mlflow --tracking_uri=http://localhost:5000  --tracking_token="dummy_token" 
 #Step4: Registers a full ZenML stack — a combination of components like orchestrator, artifact store, experiment tracker, etc. 
 ## -a default: Sets the artifact store to the default (often local).
 ## -o default: Sets the orchestrator to the default (e.g., local or airflow).
-## -d ml003_model: Uses the model deployer named ml003_model (registered in step 3).
-## -e ml003_tracker: Uses the experiment tracker named ml003_tracker (from step 2).
+## -d ml004_model: Uses the model deployer named ml004_model (registered in step 3).
+## -e ml004_tracker: Uses the experiment tracker named ml004_tracker (from step 2).
 ## --set: Sets this stack as the active stack for future runs.
-zenml stack register ml003_stack -a default -o default -d ml003_model -e ml003_tracker --set
+zenml stack register ml004_stack -a default -o default -d ml004_model -e ml004_tracker --set
 ```
 
 ## Connect to Zenml from CI/CD pipelines
@@ -85,7 +85,7 @@ export ZENML_STORE_API_KEY=<API_KEY>
 ## Delete a stack from zenml
 ```bash
 zenml stack set default
-zenml experiment-tracker delete ml003_tracker
-zenml model-deployer delete ml003_model
-zenml stack delete -y ml003_stack
+zenml experiment-tracker delete ml004_tracker
+zenml model-deployer delete ml004_model
+zenml stack delete -y ml004_stack
 ```
