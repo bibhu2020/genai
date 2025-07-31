@@ -52,5 +52,5 @@ jobs:
 
     - name: 🚀 Run ZenML Pipeline
       run: |
-        python my_pipeline.py
+        python run_pipeline.py
       working-directory: ml/ml_004
