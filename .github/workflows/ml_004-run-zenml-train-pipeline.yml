@@ -28,7 +28,7 @@ jobs:
         pip install zenml[server,mlflow]
       working-directory: ml/ml_004
 
-    # - name: 🧱 Initialize ZenML
+    # - name: 🧱 Initialize ZenML (make sure .zen folder is included)
     #   run: |
     #     zenml init
     #   working-directory: ml/ml_004
