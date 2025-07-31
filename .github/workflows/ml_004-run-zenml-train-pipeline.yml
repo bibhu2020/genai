@@ -1,0 +1,49 @@
+name: Run ZenML ML Train Pipeline (ml_004)
+
+on:
+  push:
+    paths:
+      - 'ml/ml_004/**'
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  run-pipeline:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: 📥 Checkout repository
+      uses: actions/checkout@v3
+
+    - name: 🐍 Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+
+    - name: 🧪 Install dependencies
+      run: |
+        cd ml/ml_004
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install zenml[server,mlflow]
+
+    - name: 🧱 Initialize ZenML
+      run: |
+        zenml init
+
+    - name: ⚙️ Connect to remote ZenML server (optional)
+      if: ${{ secrets.ZENML_URL != '' }}
+      run: |
+        zenml login ${{ secrets.ZENML_URL }} \
+          --username ${{ secrets.ZENML_USERNAME }} \
+          --password ${{ secrets.ZENML_PASSWORD }}
+
+    - name: 📦 Set stack (if needed)
+      if: ${{ secrets.ZENML_STACK != '' }}
+      run: |
+        zenml stack set ${{ secrets.ZENML_STACK }}
+
+    - name: 🚀 Run ZenML Pipeline
+      run: |
+        python my_pipeline.py
