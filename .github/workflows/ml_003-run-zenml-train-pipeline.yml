@@ -1,4 +1,4 @@
-name: Run ZenML ML Train Pipeline (ml_003)
+name: Run ZenML ML Train Model (ml_003)
 
 on:
   push:
