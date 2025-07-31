@@ -26,12 +26,12 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
         pip install zenml[server,mlflow]
-      working-directory: ml/ml003
+      working-directory: ml/ml_003
 
     # - name: 🧱 Initialize ZenML (make sure .zen folder is included)
     #   run: |
     #     zenml init
-    #   working-directory: ml/ml003
+    #   working-directory: ml/ml_003
 
     - name: ⚙️ Connect to remote ZenML server (optional)
       env:
@@ -39,7 +39,7 @@ jobs:
         ZENML_STORE_API_KEY: ${{ secrets.ZENML_STORE_API_KEY }}
       run: |
         echo "non-interactive login set for zenml"
-      working-directory: ml/ml003
+      working-directory: ml/ml_003
 
     # - name: 📦 Set stack (if needed)
     #   env:
@@ -48,9 +48,9 @@ jobs:
     #     if [ -n "$ZENML_STACK" ]; then
     #       zenml stack set "$ZENML_STACK"
     #     fi
-    #   working-directory: ml/ml003
+    #   working-directory: ml/ml_003
 
     - name: 🚀 Run ZenML Pipeline
       run: |
         python run_pipeline.py
-      working-directory: ml/ml003
+      working-directory: ml/ml_003
