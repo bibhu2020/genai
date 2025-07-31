@@ -16,7 +16,6 @@ jobs:
     - name: 🧹 Clean workspace
       run: |
         git clean -fdx
-      working-directory: ml/ml_003
 
     - name: 📥 Checkout repository
       uses: actions/checkout@v3
