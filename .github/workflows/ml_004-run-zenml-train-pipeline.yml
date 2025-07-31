@@ -37,13 +37,9 @@ jobs:
       env:
         ZENML_STORE_URL: ${{ secrets.ZENML_STORE_URL }}
         ZENML_STORE_API_KEY: ${{ secrets.ZENML_STORE_API_KEY }}
-      # run: |
-      #   if [ -n "$ZENML_URL" ]; then
-      #     zenml login "$ZENML_URL" \
-      #       --username "$ZENML_USERNAME" \
-      #       --password "$ZENML_PASSWORD"
-      #   fi
-      # working-directory: ml/ml_004
+      run: |
+        echo "non-interactive login set for zenml"
+      working-directory: ml/ml_004
 
     - name: 📦 Set stack (if needed)
       env:
