@@ -61,12 +61,19 @@ zenml stack register ml003_stack -a default -o default -d ml003_model -e ml003_t
 ```
 
 ## Connect to Zenml from CI/CD pipelines
+https://docs.zenml.io/deploying-zenml/connecting-to-zenml/connect-with-a-service-account
+
 From you local development machine connect to zenml and link zenml to mlflow. Also define the tracker and stack.
 This stores the stack and project id in the .zen folder. Hence, this is crucial to be checked into git.
 
 From you development machine (after loging in to Zenml), create a service account. this geneates an API_KEY
 zenml service-account create <SERVICE_ACCOUNT_NAME>
 
+zenml service-account describe <SERVICE_ACCOUNT_NAME>
+zenml service-account api-key github-action-account describe default
+
+### Rotate the api-key
+zenml service-account api-key github-action-account rotate default
 
 ```bash
 # In pipeline set the following 2 environment variable to login to zenml no interactively.

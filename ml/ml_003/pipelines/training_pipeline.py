@@ -13,6 +13,7 @@ from zenml import Model, pipeline, step
         # The name uniquely identifies this model
         name="house_prices_predictor"
     ),
+    name="ml_003_model_training"
 )
 def ml_pipeline():
     """Define an end-to-end machine learning pipeline."""

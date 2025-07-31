@@ -16,6 +16,9 @@ services:
       - "8237:8080"
     environment:
       - ZENML_STORE_URL=mysql://root:password@host.docker.internal/zenml
+      - ZENML_SERVER_JWT_SECRET_KEY="x09a@3sad*Df42ad566bb"
+    volumes:
+      - ./_data/zenml:/root/.config/zenml  # ✅ Persist ZenML config and token state
     links:
       - mysql
     depends_on:
