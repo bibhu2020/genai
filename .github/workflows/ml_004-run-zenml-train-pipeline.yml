@@ -13,10 +13,6 @@ jobs:
     runs-on: self-hosted 
 
     steps:
-    - name: 🧹 Clean workspace
-      run: |
-        git clean -fdx
-
     - name: 📥 Checkout repository
       uses: actions/checkout@v3
       with:
