@@ -13,7 +13,7 @@ from steps.evaluate_model import evaluate_model
 #     required_integrations=[MLFLOW]
 # )
 
-@pipeline(enable_cache=False)
+@pipeline(enable_cache=False, name="ml_004_model_training")
 def train_pipeline():
     """
     Args:

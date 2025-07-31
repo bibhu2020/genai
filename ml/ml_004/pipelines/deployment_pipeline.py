@@ -41,7 +41,7 @@ def deployment_trigger(
 
     return accuracy > config.min_accuracy
 
-@pipeline(enable_cache=False)
+@pipeline(enable_cache=False, name="ml_004_model_deploy")
 def continuous_deployment_pipeline1(
     min_accuracy: float = 0.9,
     workers: int = 1,
@@ -74,7 +74,7 @@ def continuous_deployment_pipeline1(
     )
 
 
-@pipeline(enable_cache=False)
+@pipeline(enable_cache=False, name="ml_004_model_deploy")
 def continuous_deployment_pipeline(
     min_accuracy: float = 0.9,
     workers: int = 1,
