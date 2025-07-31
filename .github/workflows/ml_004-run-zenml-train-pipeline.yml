@@ -28,10 +28,10 @@ jobs:
         pip install zenml[server,mlflow]
       working-directory: ml/ml_004
 
-    - name: 🧱 Initialize ZenML
-      run: |
-        zenml init
-      working-directory: ml/ml_004
+    # - name: 🧱 Initialize ZenML
+    #   run: |
+    #     zenml init
+    #   working-directory: ml/ml_004
 
     - name: ⚙️ Connect to remote ZenML server (optional)
       env:
