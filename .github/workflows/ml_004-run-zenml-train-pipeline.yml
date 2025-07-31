@@ -10,7 +10,7 @@ on:
 
 jobs:
   run-pipeline:
-    runs-on: [self-hosted, bibhulp-self-hosted] #ubuntu-latest
+    runs-on: self-hosted #ubuntu-latest
 
     steps:
     - name: 📥 Checkout repository
