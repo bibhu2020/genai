@@ -10,7 +10,7 @@ on:
 
 jobs:
   run-pipeline:
-    runs-on: self-hosted #ubuntu-latest
+    runs-on: self-hosted 
 
     steps:
     - name: 📥 Checkout repository
@@ -23,15 +23,15 @@ jobs:
 
     - name: 🧪 Install dependencies
       run: |
-        cd ml/ml_004
         python -m pip install --upgrade pip
         pip install -r requirements.txt
         pip install zenml[server,mlflow]
+      working-directory: ml/ml_004
 
     - name: 🧱 Initialize ZenML
       run: |
-        cd ml/ml_004
         zenml init
+      working-directory: ml/ml_004
 
     - name: ⚙️ Connect to remote ZenML server (optional)
       env:
@@ -39,23 +39,23 @@ jobs:
         ZENML_USERNAME: ${{ secrets.ZENML_USERNAME }}
         ZENML_PASSWORD: ${{ secrets.ZENML_PASSWORD }}
       run: |
-        cd ml/ml_004
         if [ -n "$ZENML_URL" ]; then
           zenml login "$ZENML_URL" \
             --username "$ZENML_USERNAME" \
             --password "$ZENML_PASSWORD"
         fi
+      working-directory: ml/ml_004
 
     - name: 📦 Set stack (if needed)
       env:
         ZENML_STACK: ${{ secrets.ZENML_STACK }}
       run: |
-        cd ml/ml_004
         if [ -n "$ZENML_STACK" ]; then
           zenml stack set "$ZENML_STACK"
         fi
+      working-directory: ml/ml_004
 
     - name: 🚀 Run ZenML Pipeline
       run: |
-        cd ml/ml_004
         python my_pipeline.py
+      working-directory: ml/ml_004
