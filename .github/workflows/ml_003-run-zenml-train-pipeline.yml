@@ -9,12 +9,19 @@ on:
   workflow_dispatch:
 
 jobs:
-  run-pipeline:
+  build-model:
     runs-on: self-hosted 
 
     steps:
+    - name: 🧹 Clean workspace
+      run: |
+        git clean -fdx
+      working-directory: ml/ml_003
+
     - name: 📥 Checkout repository
       uses: actions/checkout@v3
+      with:
+        clean: true
 
     - name: 🐍 Set up Python
       uses: actions/setup-python@v5
