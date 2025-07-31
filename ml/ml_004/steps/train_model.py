@@ -16,6 +16,8 @@ from zenml import step
 
 import mlflow
 from zenml.client import Client
+import joblib
+
 experiment_tracker = Client().active_stack.experiment_tracker
 
 
@@ -62,6 +64,7 @@ def train_model(
             trained_model = model.train(x_train, y_train, **best_params)
         else:
             trained_model = model.train(x_train, y_train)
+            joblib.dump(trained_model, "model.joblib")
 
         logging.info("Model Training completed")
         return trained_model
