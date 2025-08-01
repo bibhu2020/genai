@@ -23,3 +23,4 @@ ipykernel==6.29.4
 
 # ZenML core + server (Check for breaking changes!)
 zenml[server]==0.84
+boto3==1.39.8
