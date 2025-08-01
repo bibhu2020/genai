@@ -11,7 +11,7 @@ on:
 jobs:
   build-model:
     runs-on: self-hosted
-    timeout-minutes: 30   
+    timeout-minutes: 30 
 
     steps:
     - name: 📥 Checkout repository
@@ -54,6 +54,11 @@ jobs:
     #   working-directory: ml/ml_003
 
     - name: 🚀 Run ZenML Pipeline
+      env:
+        AWS_ACCESS_KEY_ID: ${{ vars.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ vars.AWS_SECRET_ACCESS_KEY }}
+        AWS_REGION: ${{ vars.AWS_REGION }}
+        AWS_ENDPOINT_URL: ${{ vars.AWS_ENDPOINT_URL }}  # Add this if MinIO is remote
       run: |
         python run_pipeline.py
       working-directory: ml/ml_003
