@@ -58,6 +58,11 @@ zenml model-deployer register ml004_model --flavor=mlflow --tracking_uri=http://
 ## -e ml004_tracker: Uses the experiment tracker named ml004_tracker (from step 2).
 ## --set: Sets this stack as the active stack for future runs.
 zenml stack register ml004_stack -a default -o default -d ml004_model -e ml004_tracker --set
+
+#updat the stack artifacts store to minio_store created in the docker-compose
+zenml integration install s3
+zenml stack update ml004_stack -a minio_store 
+
 ```
 
 ## Connect to Zenml from CI/CD pipelines
