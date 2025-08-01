@@ -72,3 +72,12 @@ zenml experiment-tracker delete ml004_tracker
 zenml model-deployer delete ml004_model
 zenml stack delete -y ml004_stack
 ```
+
+## Register minio as the artifacts store
+before doing this, create a bucket "zenmlartifacts" in minio
+```bash
+zenml artifact-store delete minio_store
+
+
+zenml artifact-store register minio_store --flavor s3 --path="s3://zenmlartifacts" --endpoint_url="http://localhost:9000" --access_key="minioadmin" --secret_key="minioadmin"
+```
