@@ -59,13 +59,8 @@ def run_deploy(config: str, min_accuracy: float):
     )
 
 if __name__ == "__main__":
-    # run_deploy() #python run_deployment.py --config deploy_and_predict --min-accuracy 0.92
-    pipeline_instance  = continuous_deployment_pipeline(
-            min_accuracy=0.9,
-            workers=1,
-            timeout=60,
-        )
-    pipeline_instance.run()
+    run_deploy() #python run_deployment.py --config deploy_and_predict --min-accuracy 0.92
+    
 
 
 

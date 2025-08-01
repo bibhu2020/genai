@@ -18,7 +18,7 @@ conda --version
 ## Create a virtual evironment in the app folder (optional)
 ```bash
 conda create --prefix ./.venv python=3.11 -y
-conda activate ~/ws/genai/ml/ml_004/.venv
+conda activate ~/ws/genai/ml/ml_003/.venv
 uv pip install -r requirements.txt
 ```
 

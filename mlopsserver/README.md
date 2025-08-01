@@ -81,3 +81,12 @@ zenml artifact-store delete minio_store
 
 zenml artifact-store register minio_store --flavor s3 --path="s3://zenmlartifacts" --endpoint_url="http://localhost:9000" --access_key="minioadmin" --secret_key="minioadmin"
 ```
+
+## Zenml Artifacts access from local browser and github
+Add the following variables in Github environment variable and local machine environment variables
+```
+export AWS_ACCESS_KEY_ID=minioadmin
+export AWS_SECRET_ACCESS_KEY=minioadmin
+export AWS_REGION=us-east-1
+export AWS_ENDPOINT_URL=http://localhost:9000/
+```
