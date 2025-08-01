@@ -1,10 +1,10 @@
 from zenml.config import DockerSettings
 from zenml.integrations.constants import MLFLOW
 from zenml.pipelines import pipeline
-# from steps.clean_data import clean_data
-# from steps.ingest_data import ingest_data
-# from steps.train_model import train_model
-# from steps.evaluate_model import evaluate_model
+from steps.clean_data import clean_data
+from steps.ingest_data import ingest_data
+from steps.train_model import train_model
+from steps.evaluate_model import evaluate_model
 
 # from zenml.config import DockerSettings
 # # from zenml.enums import PythonPackageInstaller
@@ -24,10 +24,7 @@ from zenml.pipelines import pipeline
 # deployer = mlflow_model_deployer_step()
 
 @pipeline(enable_cache=False, name="ml_004_model_training")
-def train_pipeline(ingest_data,
-    clean_data,
-    train_model,
-    evaluate_model):
+def train_pipeline():
     """
     Args:
         ingest_data: DataClass
