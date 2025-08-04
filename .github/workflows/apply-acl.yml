@@ -1,4 +1,6 @@
 name: Apply ACL
+permissions:
+  contents: read
 
 on:
   push:
