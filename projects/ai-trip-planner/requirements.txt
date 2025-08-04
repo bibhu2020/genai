@@ -14,5 +14,6 @@ uvicorn
 httpx
 requests
 azure-identity
+mlflow
 
 -e .

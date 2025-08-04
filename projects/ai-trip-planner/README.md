@@ -21,9 +21,9 @@ uv python list
 
 uv python install cpython-3.11.12-linux-x86_64-gnu 
 
-uv venv _venv --python=cpython-3.11.12-linux-x86_64-gnu
+uv venv .venv --python=cpython-3.11.12-linux-x86_64-gnu
 
-source _venv/bin/activate
+source .venv/bin/activate
 
 deactivate
 ```

@@ -12,7 +12,6 @@ from typing import TypedDict, Sequence, Optional, Annotated
 from langchain_core.messages import BaseMessage, HumanMessage
 from datetime import datetime
 
-
 class AgentState(TypedDict):
     # messages is a list (or other sequence) of BaseMessage objects, and it has extra metadata attached to it: add_messages
     ## Sequence is a type hint that represents any ordered, iterable collection of items — like lists, tuples, or strings 
@@ -47,6 +46,7 @@ class GraphBuilder():
         """Main agent function"""
         user_question = state["messages"]
         input_question = [self.system_prompt] + user_question
+        # with mlflow.start_run(run_name="genai-trip-planner-llm-call", nested=True):
         response = self.llm_with_tools.invoke(input_question)
         return {"messages": [response]}
     
@@ -59,6 +59,7 @@ class GraphBuilder():
             return "continue"
     
     def build_graph(self):
+        
         graph_builder=StateGraph(MessagesState)
         graph_builder.add_node("agent", self.agent_function)
         graph_builder.add_node("tools", ToolNode(tools=self.tools))

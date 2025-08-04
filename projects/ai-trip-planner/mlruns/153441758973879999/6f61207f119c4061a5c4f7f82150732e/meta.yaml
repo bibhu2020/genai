@@ -1,0 +1,14 @@
+artifact_uri: file:///home/azureuser/ws/genai/projects/ai-trip-planner/mlruns/153441758973879999/6f61207f119c4061a5c4f7f82150732e/artifacts
+end_time: 1754086955601
+entry_point_name: ''
+experiment_id: '153441758973879999'
+lifecycle_stage: active
+run_id: 6f61207f119c4061a5c4f7f82150732e
+run_name: genai-trip-planner-dev-run
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1754086955584
+status: 3
+tags: []
+user_id: azureuser

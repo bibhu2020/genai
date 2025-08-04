@@ -72,7 +72,30 @@ services:
       --default-artifact-root /mlflow/mlruns
     networks:
       - zenml_net
-  
+
+#   langwatch:
+#     image: langwatch/langwatch:latest
+#     ports:
+#       - "3000:3000"
+#     environment:
+#       - DATABASE_URL=postgresql://langwatch:password@postgresdb:5432/langwatch
+#       - LANGWATCH_API_KEY=xXX-kks-8jjs-kks-8jjs-kks
+#     depends_on:
+#       - postgresdb
+
+#   postgresdb:
+#     image: postgres:14
+#     restart: always
+#     environment:
+#       POSTGRES_USER: langwatch
+#       POSTGRES_PASSWORD: password
+#       POSTGRES_DB: langwatch
+#     volumes:
+#       - ./_data/pgdata:/var/lib/postgresql/data
+
+# volumes:
+#   pgdata:
+
 networks:
   zenml_net:
     driver: bridge

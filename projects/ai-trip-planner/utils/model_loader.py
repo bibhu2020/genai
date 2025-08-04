@@ -25,12 +25,15 @@ class ModelLoader:
         self.config = ConfigLoader()
 
     def load_llm(self):
-        self.model_provider = "azureopenai"
+        self.model_provider = "groq"
         print(f"LLM loading from provider: {self.model_provider}")
 
         if self.model_provider == "groq":
             print("→ Using Groq")
             groq_api_key = os.getenv("GROQ_API_KEY")
+            print(f"Groq API Key: {groq_api_key}")
+            if not groq_api_key:
+                raise ValueError("GROQ_API_KEY environment variable is not set.")
             model_name = self.config["llm"]["groq"]["model_name"]
             return ChatGroq(model=model_name, api_key=groq_api_key)
 
