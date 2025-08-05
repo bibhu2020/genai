@@ -23,7 +23,8 @@ from steps.evaluate_model import evaluate_model
 # )
 # deployer = mlflow_model_deployer_step()
 
-@pipeline(enable_cache=False, name="ml_004_model_training")
+@pipeline(enable_cache=False, 
+          name="ml_004_model_training")
 def train_pipeline():
     """
     Args:

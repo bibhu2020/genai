@@ -46,13 +46,13 @@ def run_main(stop_service: bool):
     # Run the inference pipeline
     inference_pipeline()
 
-    print(
-        "Now run \n "
-        f"    mlflow ui --backend-store-uri {get_tracking_uri()}\n"
-        "To inspect your experiment runs within the mlflow UI.\n"
-        "You can find your runs tracked within the `mlflow_example_pipeline`"
-        "experiment. Here you'll also be able to compare the two runs."
-    )
+    # print(
+    #     "Now run \n "
+    #     f"    mlflow ui --backend-store-uri {get_tracking_uri()}\n"
+    #     "To inspect your experiment runs within the mlflow UI.\n"
+    #     "You can find your runs tracked within the `mlflow_example_pipeline`"
+    #     "experiment. Here you'll also be able to compare the two runs."
+    # )
 
     # Fetch existing services with the same pipeline name, step name, and model name
     service = model_deployer.find_model_server(

@@ -26,7 +26,9 @@ model = Model(
 )
 
 
-@step(enable_cache=False, experiment_tracker=experiment_tracker.name, model=model)
+@step(enable_cache=False, 
+      experiment_tracker=experiment_tracker.name, 
+      model=model)
 def model_building_step(
     X_train: pd.DataFrame, y_train: pd.Series
 ) -> Annotated[Pipeline, ArtifactConfig(name="sklearn_pipeline", is_model_artifact=True)]:
@@ -74,11 +76,15 @@ def model_building_step(
     pipeline = Pipeline(steps=[("preprocessor", preprocessor), ("model", LinearRegression())])
 
     # Start an MLflow run to log the model training process
+    print("Starting MLflow run for model training1...")
     if not mlflow.active_run():
+        print("Starting MLflow run for model training2...")
         mlflow.start_run()  # Start a new MLflow run if there isn't one active
 
     try:
         # Enable autologging for scikit-learn to automatically capture model metrics, parameters, and artifacts
+        # mlflow.set_experiment(experiment_tracker.name)  # <- custom experiment name
+        print("Starting MLflow run for model training3...")
         mlflow.sklearn.autolog()
 
         logging.info("Building and training the Linear Regression model.")
@@ -101,6 +107,7 @@ def model_building_step(
 
     finally:
         # End the MLflow run
-        mlflow.end_run()
+        print("Starting MLflow run for model training4...")
+        # mlflow.end_run()
 
     return pipeline

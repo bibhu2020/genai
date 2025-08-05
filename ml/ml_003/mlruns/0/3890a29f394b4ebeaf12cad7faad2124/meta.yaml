@@ -1,0 +1,15 @@
+artifact_uri: file:///home/azureuser/ws/genai/ml/ml_003/mlruns/0/3890a29f394b4ebeaf12cad7faad2124/artifacts
+end_time: 1754339922206
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: 3890a29f394b4ebeaf12cad7faad2124
+run_name: glamorous-worm-516
+run_uuid: 3890a29f394b4ebeaf12cad7faad2124
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1754339922190
+status: 3
+tags: []
+user_id: azureuser

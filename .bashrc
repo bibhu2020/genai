@@ -153,6 +153,11 @@ fi
 if [ -d "$HOME/ws/genai/mlopsserver" ]; then
   (
     cd "$HOME/ws/genai/mlopsserver" && docker compose up -d
+    # following variables is used by zenml to connect to minio store
+    export AWS_ACCESS_KEY_ID=minioadmin
+    export AWS_SECRET_ACCESS_KEY=minioadmin
+    export AWS_REGION=us-east-1
+    export AWS_ENDPOINT_URL=http://localhost:9000/
   )
   cd "$HOME/ws/genai"
 fi
