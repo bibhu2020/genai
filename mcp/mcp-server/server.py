@@ -12,6 +12,13 @@ from azure.mgmt.loganalytics import LogAnalyticsManagementClient
 
 load_dotenv()  # loads PG_HOST, PG_USER, PG_PASS, PG_DB
 
+# Define allowed table names to prevent SQL injection via table name
+ALLOWED_TABLES = {
+    "your_table1",
+    "your_table2",
+    # Add all table names that can be used via the API
+}
+
 # FastAPI instance
 app = FastAPI()
 
@@ -100,6 +107,8 @@ def delete_postgres_tool(table: str, condition: dict):
     """
     Delete data from the specified PostgreSQL table.
     """
+    if table not in ALLOWED_TABLES:
+        raise ValueError(f"Table '{table}' is not allowed.")
     try:
         where_clause = ' AND '.join([f"{col} = %s" for col in condition.keys()])
         query = f"DELETE FROM {table} WHERE {where_clause}"
@@ -264,6 +273,8 @@ async def delete_postgres_endpoint(request: Request):
 
     if not table or not condition:
         return JSONResponse(status_code=400, content={"error": "Missing 'table' or 'condition' in request body."})
+    if table not in ALLOWED_TABLES:
+        return JSONResponse(status_code=400, content={"error": f"Table '{table}' is not allowed."})
 
     try:
         delete_postgres_tool(table, condition)
