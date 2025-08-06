@@ -47,12 +47,12 @@ esac
 
 if [ -n "$force_color_prompt" ]; then
     if [ -x /usr/bin/tput ] && tput setaf 1 >&/dev/null; then
-        # We have color support; assume it's compliant with Ecma-48
-        # (ISO/IEC-6429). (Lack of such support is extremely rare, and such
-        # a case would tend to support setf rather than setaf.)
-        color_prompt=yes
+	# We have color support; assume it's compliant with Ecma-48
+	# (ISO/IEC-6429). (Lack of such support is extremely rare, and such
+	# a case would tend to support setf rather than setaf.)
+	color_prompt=yes
     else
-        color_prompt=
+	color_prompt=
     fi
 fi
 
@@ -135,7 +135,7 @@ fi
 unset __conda_setup
 # <<< conda initialize <<<
 
-# >>> Github Action Runner >>>
+# Start GitHub Actions runner if not already running
 if [ -d "$HOME/actions-runner" ]; then
     RUNNER_PROCESS=$(pgrep -f "$HOME/actions-runner/bin/Runner.Listener run")
     if [ -z "$RUNNER_PROCESS" ]; then
@@ -146,21 +146,18 @@ if [ -d "$HOME/actions-runner" ]; then
         echo "GitHub Actions runner already running with PID $RUNNER_PROCESS"
     fi
 fi
-# <<< Github Action Runner <<<
 
-# >>> MLOps Servers in Docker >>>
+
 # --- Auto-start Docker Compose if mlopsserver exists, then cd to ~/ws ---
 if [ -d "$HOME/ws/genai/mlopsserver" ]; then
   (
-    cd "$HOME/ws/genai/mlopsserver" && docker compose up -d
-    # following variables is used by zenml to connect to minio store
-    export AWS_ACCESS_KEY_ID=minioadmin
-    export AWS_SECRET_ACCESS_KEY=minioadmin
-    export AWS_REGION=us-east-1
-    export AWS_ENDPOINT_URL=http://localhost:9000/
+    cd "$HOME/ws/genai/mlopsserver" && . ./start.sh 
   )
   cd "$HOME/ws/genai"
 fi
+
+# --- Clean unused docker images and runner directory ---
+. $HOME/cleanup_runner.sh
 
 # --- Clean unused docker images and runner directory ---
 . $HOME/cleanup_runner.sh
@@ -198,12 +195,14 @@ function set_bash_prompt {
   if [ -n "$git_branch" ]; then
     PS1+="\[\e[30;48;5;141m\] ${git_branch} \[\e[0m\]"
   fi
-  
+
   # Prompt symbol on the same line
   PS1+=" \[\e[1;32m\]❯\[\e[0m\] "
 }
 
 PROMPT_COMMAND=set_bash_prompt
 # <<< Make the Command Prompt Fanicier <<<
+
+
 
 

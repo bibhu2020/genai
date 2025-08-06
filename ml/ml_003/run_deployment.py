@@ -19,7 +19,7 @@ from zenml.integrations.mlflow.model_deployers.mlflow_model_deployer import (
 )
 def run_main(stop_service: bool):
     """Run the prices predictor deployment pipeline"""
-    model_name = "prices_predictor"
+    model_name = "sales_prices_predictor"
 
     if stop_service:
         # Get the MLflow model deployer stack component

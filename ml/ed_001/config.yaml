@@ -1,0 +1,34 @@
+# Configuration of the Model Control Plane
+model:
+  name: sales_forecast_model
+  license: Apache 2.0
+  description: Predictor of sales.
+  version: 1.0.0
+  tags: ["regression", "sales", "sales_forecast_model"]
+
+pipelines:
+  continuous_deployment_pipeline:
+    enable_cache: False
+    name: ed_001_model_deploy
+    description: Continuous deployment pipeline for sales forecast model.
+    settings:
+      docker:
+        required_integrations:
+          - mlflow
+  training_pipeline:
+    enable_cache: True
+    name: ed_001_model_training
+    description: Training pipeline for sales forecast model.
+    settings:
+      docker:
+        required_integrations:
+          - mlflow
+
+  inference_pipeline:
+    enable_cache: True
+    name: ed_001_model_inference
+    description: Inference pipeline for sales forecast model.
+    settings:
+      docker:
+        required_integrations:
+          - mlflow

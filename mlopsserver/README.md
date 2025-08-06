@@ -47,6 +47,7 @@ conda --version
 
 **Step2**: (optional) Create conda virtual environment in the project folder, and install the required packages.
 ```bash
+conda init
 conda create --prefix ./.venv python=3.11 -y
 conda activate ~/ws/genai/ml/ml_004/.venv
 uv pip install -r requirements.txt
@@ -136,4 +137,11 @@ zenml stack delete -y ml004_stack
 zenml artifact-store delete minio_store
 
 zenml stack describe
+
+# Display running models on ZENML
+zenml model-deployer models list
+zenml model-deployer models start  <uuid>
+zenml model-deployer models delete  <uuid>
+zenml model-deployer models describe   <uuid>
+
 ```
