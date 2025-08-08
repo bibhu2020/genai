@@ -32,12 +32,14 @@ def ml_pipeline():
     filled_data = handle_missing_values_step(filled_data_no_index, strategy="mean")
 
     # Feature Engineering Step
-    engineered_data = feature_engineering_step(
-        filled_data, strategy="log", features=["TV", "Radio", "Newspaper", "Sales"]
-    )
+    # engineered_data = feature_engineering_step(
+    #     filled_data, strategy="log", features=["TV", "Radio", "Newspaper", "Sales"]
+    # )
+
 
     # Outlier Detection Step
-    clean_data = outlier_detection_step(engineered_data, column_name="Sales")
+    # clean_data = outlier_detection_step(engineered_data, column_name="Sales")
+    clean_data = outlier_detection_step(filled_data, column_name="Sales")
 
     # Data Splitting Step
     X_train, X_test, y_train, y_test = data_splitter_step(clean_data, target_column="Sales")

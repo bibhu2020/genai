@@ -144,4 +144,34 @@ zenml model-deployer models start  <uuid>
 zenml model-deployer models delete  <uuid>
 zenml model-deployer models describe   <uuid>
 
+# Project (in local version, you can create project, can't view on UI)
+zenml project register ed_001
+zenml project set ed_001
+zenml project list
+zenml project describe
+zenml project delete
 ```
+
+# Kubeflow vs Zenml vs Mlflow
+
+**Zenml**
+    - Built-in pipeline or orchestration support.
+    - Nice UI dashboard to visualize the pipelines
+    - Large number of plugins that integrate with products with Airflow, mlflow, etc...
+    - No in-built hardware to run pipelines.
+    - In-built hosting feature to infere a model.
+    - No model repository. (it leverages the mlflow repository)
+    - No experiment tracking. (it leverages the mlflow experiments)
+
+**Mlflow**
+    - Has native experiment-tracking
+    - Works in conjuction with Zenml. It tracks the experiments (model evaluations) triggered by Zenml.
+    - Has native model repository
+    - No in-built hardware to run pipelines.
+
+**Kubelfow**
+    - It runs in kubernetes cluster. 
+    - Has built-in pipeline support.
+    - It leverages the kubernetes HW to run the pipelines. Hence, it takes the inheritted benefits of the kubernetes like auto-scaling, auto-recovery etc... It can easily auto-scale for large model scaling.
+    - Nice UI dashboard to visualize the pipelines
+    - No model repository.

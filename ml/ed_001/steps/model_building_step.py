@@ -1,14 +1,16 @@
 import logging
-from typing import Annotated
-
 import mlflow
 import pandas as pd
+import numpy as np
+
+from typing import Annotated
+from zenml import Model
 from sklearn.base import RegressorMixin
 from sklearn.compose import ColumnTransformer
 from sklearn.impute import SimpleImputer
 from sklearn.linear_model import LinearRegression
 from sklearn.pipeline import Pipeline
-from sklearn.preprocessing import OneHotEncoder
+from sklearn.preprocessing import OneHotEncoder, FunctionTransformer
 from zenml import ArtifactConfig, step
 from zenml.enums import ArtifactType
 from zenml.client import Client
@@ -19,7 +21,7 @@ config = get_config()
 experiment_tracker = Client().active_stack.experiment_tracker
 if not experiment_tracker:
     raise ValueError("No active experiment tracker found. Please set up an experiment tracker in your ZenML stack.")
-from zenml import Model
+
 
 model = Model(
     name=config["model"]["name"],
@@ -46,6 +48,7 @@ def model_building_step(
     Returns:
     Pipeline: The trained scikit-learn pipeline including preprocessing and the Linear Regression model.
     """
+
     # Ensure the inputs are of the correct type
     if not isinstance(X_train, pd.DataFrame):
         raise TypeError("X_train must be a pandas DataFrame.")
@@ -60,7 +63,13 @@ def model_building_step(
     logging.info(f"Numerical columns: {numerical_cols.tolist()}")
 
     # Define preprocessing for categorical and numerical features
-    numerical_transformer = SimpleImputer(strategy="mean")
+    numerical_transformer = Pipeline(
+        steps=[
+            ("log", FunctionTransformer(np.log1p, validate=True)),  # add this first
+            ("imputer", SimpleImputer(strategy="mean")),  # your imputer
+        ]
+    )
+    # numerical_transformer = SimpleImputer(strategy="mean") #this may not take any action because we already handled missing values in the preprocessing. this is a safety net.
     categorical_transformer = Pipeline(
         steps=[
             ("imputer", SimpleImputer(strategy="most_frequent")),
@@ -80,15 +89,13 @@ def model_building_step(
     pipeline = Pipeline(steps=[("preprocessor", preprocessor), ("model", LinearRegression())])
 
     # Start an MLflow run to log the model training process
-    print("Starting MLflow run for model training1...")
-    if not mlflow.active_run():
-        print("Starting MLflow run for model training2...")
+    print("zenml will automatically start a run if there is no active run. this is just a safety net.")
+    if not mlflow.active_run(): 
         mlflow.start_run()  # Start a new MLflow run if there isn't one active
 
     try:
         # Enable autologging for scikit-learn to automatically capture model metrics, parameters, and artifacts
         # mlflow.set_experiment(experiment_tracker.name)  # <- custom experiment name
-        print("Starting MLflow run for model training3...")
         mlflow.sklearn.autolog()
 
         logging.info("Building and training the Linear Regression model.")
@@ -111,7 +118,7 @@ def model_building_step(
 
     finally:
         # End the MLflow run
-        print("Starting MLflow run for model training4...")
+        print("Model training completed.... ")
         # mlflow.end_run()
 
     return pipeline

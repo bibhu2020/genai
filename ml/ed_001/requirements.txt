@@ -23,3 +23,8 @@ s3fs>2022.3.0,!=2025.3.1
 aws-profile-manager==0.7.3
 streamlit>=1.35.0
 requests>=2.31.0
+tiktoken==0.7.0
+openai>=1.40.0
+langchain>=0.3.27
+langchain-community>=0.3.0
+langchain-openai>=0.3.0

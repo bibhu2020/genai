@@ -1,13 +1,20 @@
 import logging
-from typing import Tuple
-
 import pandas as pd
+import mlflow  # Import mlflow here
+from zenml.client import Client
+
+from typing import Tuple
 from sklearn.pipeline import Pipeline
 from src.model_evaluator import ModelEvaluator, RegressionModelEvaluationStrategy
 from zenml import step
 
+# Get the active experiment tracker from ZenML
+experiment_tracker = Client().active_stack.experiment_tracker
+if not experiment_tracker:
+    raise ValueError("No active experiment tracker found. Please set up an experiment tracker in your ZenML stack.")
 
-@step(enable_cache=False)
+@step(enable_cache=False,
+      experiment_tracker=experiment_tracker.name)
 def model_evaluator_step(
     trained_model: Pipeline, X_test: pd.DataFrame, y_test: pd.Series
 ) -> Tuple[dict, float]:
@@ -44,5 +51,18 @@ def model_evaluator_step(
     # Ensure that the evaluation metrics are returned as a dictionary
     if not isinstance(evaluation_metrics, dict):
         raise ValueError("Evaluation metrics must be returned as a dictionary.")
+    
+    # Log metrics to MLflow with active run
+    print("zenml will automatically start a run if there is no active run. this is just a safety net.")
+    if not mlflow.active_run(): 
+        mlflow.start_run()  # Start a new MLflow run if there isn't one active
+
+    for metric_name, metric_value in evaluation_metrics.items():
+        if isinstance(metric_value, (int, float)):
+            print(f"Logging metric > {metric_name}: {metric_value}")
+            mlflow.log_metric(f"test_{metric_name.lower().replace(' ', '_')}", metric_value)
+        else:
+            logging.warning(f"Skipping logging of non-numeric metric {metric_name}")
+
     mse = evaluation_metrics.get("Mean Squared Error", None)
     return evaluation_metrics, mse
