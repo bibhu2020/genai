@@ -2,6 +2,9 @@
 # see /usr/share/doc/bash/examples/startup-files (in the package bash-doc)
 # for examples
 
+# Don't exit shell on error
+set +e
+
 # If not running interactively, don't do anything
 case $- in
     *i*) ;;
