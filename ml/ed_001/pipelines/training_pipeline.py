@@ -29,7 +29,7 @@ def ml_pipeline():
     filled_data_no_index = handle_missing_values_step(raw_data, strategy="drop_index")
 
     # Handling Missing Values Step
-    filled_data = handle_missing_values_step(filled_data_no_index, strategy="mean")
+    filled_data = handle_missing_values_step(filled_data_no_index, strategy="median")
 
     # Feature Engineering Step
     # engineered_data = feature_engineering_step(

@@ -1,0 +1,7 @@
+mcp[cli]
+azure-identity
+openai
+python-dotenv
+prettytable
+websockets
+pandas

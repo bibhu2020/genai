@@ -47,7 +47,7 @@ conda --version
 
 **Step2**: (optional) Create conda virtual environment in the project folder, and install the required packages.
 ```bash
-conda init
+uv init
 conda create --prefix ./.venv python=3.11 -y
 conda activate ~/ws/genai/ml/ml_004/.venv
 uv pip install -r requirements.txt

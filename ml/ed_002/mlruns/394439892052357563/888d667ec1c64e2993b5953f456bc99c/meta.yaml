@@ -1,0 +1,15 @@
+artifact_uri: file:///home/azureuser/ws/genai/ml/ed_001/mlruns/394439892052357563/888d667ec1c64e2993b5953f456bc99c/artifacts
+end_time: 1754654455815
+entry_point_name: ''
+experiment_id: '394439892052357563'
+lifecycle_stage: active
+run_id: 888d667ec1c64e2993b5953f456bc99c
+run_name: likeable-ant-66
+run_uuid: 888d667ec1c64e2993b5953f456bc99c
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1754654455780
+status: 3
+tags: []
+user_id: azureuser

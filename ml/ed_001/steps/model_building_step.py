@@ -10,7 +10,7 @@ from sklearn.compose import ColumnTransformer
 from sklearn.impute import SimpleImputer
 from sklearn.linear_model import LinearRegression
 from sklearn.pipeline import Pipeline
-from sklearn.preprocessing import OneHotEncoder, FunctionTransformer
+from sklearn.preprocessing import OneHotEncoder, FunctionTransformer, StandardScaler, MinMaxScaler
 from zenml import ArtifactConfig, step
 from zenml.enums import ArtifactType
 from zenml.client import Client
@@ -65,8 +65,10 @@ def model_building_step(
     # Define preprocessing for categorical and numerical features
     numerical_transformer = Pipeline(
         steps=[
-            ("log", FunctionTransformer(np.log1p, validate=True)),  # add this first
-            ("imputer", SimpleImputer(strategy="mean")),  # your imputer
+            ("imputer", SimpleImputer(strategy="median")),  # your imputer
+            # ("log", FunctionTransformer(np.log1p, validate=True)),  # add this first
+            ("z-scaler", StandardScaler()),  # add this first
+            # ("minmax", MinMaxScaler()),  # add this first
         ]
     )
     # numerical_transformer = SimpleImputer(strategy="mean") #this may not take any action because we already handled missing values in the preprocessing. this is a safety net.
