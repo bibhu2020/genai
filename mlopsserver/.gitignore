@@ -1,2 +1,5 @@
 /_data
 _data
+
+# BUT do not ignore env.sh
+!env.sh
