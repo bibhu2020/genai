@@ -159,10 +159,6 @@ if [ -d "$HOME/ws/genai/mlopsserver" ]; then
   cd "$HOME/ws/genai/ml/ed_003"  || echo "⚠ cd to ws failed"
   . $HOME/ws/genai/ml/ed_003/setup.sh || echo "⚠ setup.sh failed, continuing..."
 fi
-
-
-# --- Clean unused docker images and runner directory ---
-. $HOME/cleanup_runner.sh
 # <<< MLOps Servers in Docker <<<
 
 # >>> Make the Command Prompt Fanicier >>>
