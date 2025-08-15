@@ -151,10 +151,13 @@ fi
 # --- Auto-start Docker Compose if mlopsserver exists, then cd to ~/ws ---
 if [ -d "$HOME/ws/genai/mlopsserver" ]; then
   (
-    cd "$HOME/ws/genai/mlopsserver" && . ./env.sh && . ./start.sh 
+	. $HOME/ws/genai/mlopsserver/env.sh || echo "⚠ env.sh failed, continuing..."
+	. $HOME/ws/genai/mlopsserver/start.sh || echo "⚠ start.sh failed, continuing..."
+    # --- Clean unused docker images and runner directory ---
+	. $HOME/ws/genai/mlopsserver/cleanup_runner.sh || echo "⚠ cleanup_runner.sh failed, continuing..."
   )
-  cd "$HOME/ws/genai/ml/ed_003"
-  . ./setup.sh
+  cd "$HOME/ws/genai/ml/ed_003"  || echo "⚠ cd to ws failed"
+  . $HOME/ws/genai/ml/ed_003/setup.sh || echo "⚠ setup.sh failed, continuing..."
 fi
 
 
