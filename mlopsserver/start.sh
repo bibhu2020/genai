@@ -3,7 +3,7 @@
 # Start the MLOps server with Docker Compose
 # set -e  
 
-. ./env.sh || echo "⚠ env.sh failed, continuing..." # Load environment variables from .env file
+. $HOME/ws/genai/mlopsserver/env.sh || echo "⚠ env.sh failed, continuing..." # Load environment variables from .env file
 
 docker compose up -d
 # Wait for the services to be up and running
