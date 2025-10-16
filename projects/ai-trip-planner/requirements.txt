@@ -15,5 +15,6 @@ httpx
 requests
 azure-identity
 mlflow
+gradio
 
 -e .

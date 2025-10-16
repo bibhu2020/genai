@@ -2,6 +2,6 @@
 # Start the MLOps server with Docker Compose
 # set -e  
 
-. ./env.sh  # Load environment variables from .env file
+. $HOME/ws/genai/mlopsserver/env.sh 
 
-docker compose down
+docker compose -f $HOME/ws/genai/mlopsserver/docker-compose.yaml  down

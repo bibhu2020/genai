@@ -1,0 +1,32 @@
+name: AI Trip Planner Docker Build and Push
+
+on:
+  push:
+    branches:
+      - main  # or your default branch
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Checkout the repo
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # 2. Log in to Docker Hub
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      # 3. Build Docker image
+      - name: Build Docker image
+        run: |
+          docker build -t ${{ secrets.AI_TRIP_PLANNER_IMAGE_NAME }}:latest .
+
+      # 4. Push Docker image to Docker Hub
+      - name: Push Docker image
+        run: |
+          docker push ${{ secrets.AI_TRIP_PLANNER_IMAGE_NAME }}:latest
